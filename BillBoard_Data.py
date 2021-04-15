@@ -32,21 +32,34 @@ def getBillBoardLink():
     for rank in ranks:
         goodRank = rank.text.strip()
         rankings.append(goodRank)
-    print(rankings)
+    #print(songTitles, artistNames, rankings)
+    return songTitles, artistNames, rankings
+    #print(rankings)
+
+    #peak = []
+    #songPeaks = soup.find_all('div', class_ = "chart-list-item__position")
 
 
+def setUpDatabase(db_name):
+    path = os.path.dirname(os.path.abspath(__file__))
+    conn = sqlite3.connect(path+'/'+db_name)
+    cur = conn.cursor()
+    return cur, conn
+
+def createDatabase(cur, conn):
+    cur.execute("DROP TABLE IF EXISTS BillBoard")
+    #cur, conn = setUpDatabase('BillBoard.db')
+    cur.execute("CREATE TABLE BillBoard (song TEXT, artist TEXT, rank INTEGER)") 
+    song, artist, ranking = getBillBoardLink()
+    for item in range(len(song))[:25]:
+        cur.execute("INSERT INTO BillBoard (song, artist, rank) VALUES (?, ?, ?)", (song[item], artist[item], ranking[item]))
+    conn.commit()
+
+def main():
+    getBillBoardLink()
+    cur, conn = setUpDatabase('BillBoard.db')
+    createDatabase(cur, conn)
     
-    #do .text and look through the elements 
-    #do re.findall to find all song titles 
-
-  # with open('chart.json', 'w') as json_file:
-   #     json.loads(chart.text)
-    #chart_json = jso
-    #print(titles)
-
-#<div class="chart-list-item now-playing" data-rank="1" data-artist="Drake" data-title="What's Next" data-has-content="true">
-            
-getBillBoardLink()
-
+main()
 
 #API_key = ''
