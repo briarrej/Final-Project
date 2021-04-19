@@ -46,19 +46,23 @@ def setUpDatabase(db_name):
     cur = conn.cursor()
     return cur, conn
 
-def createDatabase(cur, conn):
-    cur.execute("DROP TABLE IF EXISTS BillBoard")
+def createDatabase(cur, conn, startIndex):
+    #cur.execute("DROP TABLE IF EXISTS BillBoard")
     #cur, conn = setUpDatabase('BillBoard.db')
-    cur.execute("CREATE TABLE BillBoard (song TEXT, artist TEXT, rank INTEGER)") 
     song, artist, ranking = getBillBoardLink()
-    for item in range(len(song))[:25]:
+    for item in range(startIndex, startIndex + 25):
         cur.execute("INSERT INTO BillBoard (song, artist, rank) VALUES (?, ?, ?)", (song[item], artist[item], ranking[item]))
     conn.commit()
 
 def main():
     getBillBoardLink()
     cur, conn = setUpDatabase('BillBoard.db')
-    createDatabase(cur, conn)
+    cur.execute("CREATE TABLE IF NOT EXISTS BillBoard (song TEXT, artist TEXT, rank INTEGER UNIQUE)") 
+    cur.execute('SELECT max (rank) from BillBoard')
+    startIndex = cur.fetchone()[0]
+    if startIndex == None:
+        startIndex = 0
+    createDatabase(cur, conn, startIndex)
     
 main()
 
