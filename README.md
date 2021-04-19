@@ -1,2 +1,2 @@
 # Final-Project
-Final project with Morgan Miller
+Final project with Morgan Miller and Briarre Johnson
