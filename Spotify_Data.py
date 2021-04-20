@@ -16,6 +16,9 @@ def getSpotifyData():
     redirect_uri='https://example.com/callback/',
     sp = spotipy.Spotify(token))
 
+     #GET https://api.spotify.com/v1/me/top/{type}
+     "https://api.spotify.com/v1/users/spotify_espa%C3%B1a/playlists/21THa8j9TaSGuXYNBU5tsC/tracks"
+
 
 def join_tables(cur, conn):
     cur.execute("SELECT Hot100.song, ArtistIds.artist FROM Hot100 LEFT JOIN ArtistIds ON Hot100.artist_id = ArtistIds.artist_id")
