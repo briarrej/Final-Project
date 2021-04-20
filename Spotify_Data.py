@@ -1,5 +1,6 @@
 import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
+import spotipy.util as util
+#from spotipy.oauth2 import SpotifyClientCredentials
 from bs4 import BeautifulSoup
 import requests
 import re
@@ -9,15 +10,45 @@ import unittest
 import json
 import sqlite3
 
-def getSpotifyData():
-    token = util.prompt_for_user_token(	'7tj4dlofb2yvuijru40p3grnp', scope = 'playlist-modify-public', 
-    cid = '659482023a4b40c7b4356740ff599546',
-    secret = 'b6ff42b1e22f4e94bdb0fa0e05789349',
-    redirect_uri='https://example.com/callback/',
-    sp = spotipy.Spotify(token))
+def getSpotifyObject(username, scope):
+    token = util.prompt_for_user_token(username, scope, client_id = '659482023a4b40c7b4356740ff599546', 
+                                                            client_secret = 'b6ff42b1e22f4e94bdb0fa0e05789349',
+                                                                redirect_uri='https://example.com/callback/')
+    spotify = spotipy.Spotify(auth=token)
+    return spotify
 
-     #GET https://api.spotify.com/v1/me/top/{type}
-     "https://api.spotify.com/v1/users/spotify_espa%C3%B1a/playlists/21THa8j9TaSGuXYNBU5tsC/tracks"
+def user_info(spotify):
+    return spotify.current_user()
+
+def create_playlist(spotify):
+    #user_id = spotify.user_info().get('id', "None")
+    top_50_usa_data = spotify.playlist_tracks('37i9dQZF1DXcBWIGoYBM5M')
+    top_50_uk_data = spotify.playlist_tracks('153yGNYdzvyCZxzDnIzNUx')
+    song_tuple_list = []
+
+    rank_counter = 1 
+    for song in top_50_usa_data['items']:
+        song_title = song['track']['name']
+        song_artist = song['track']['artists'][0]['name']
+        song_pop= song['track']['popularity']
+        song_date = song['track']['album']['release_date']
+        song_rank = rank_counter
+        song_tuple_list.append((song_title, song_artist, song_rank, song_date, song_pop, "usa"))
+        rank_counter += 1 
+
+    rank_counter = 1 
+    for song in top_50_uk_data['items']:
+        song_title = song['track']['name']
+        song_artist = song['track']['artists'][0]['name']
+        song_pop= song['track']['popularity']
+        song_date = song['track']['album']['release_date']
+        song_rank = rank_counter
+        song_tuple_list.append((song_title, song_artist, song_rank, song_date, song_pop, "uk"))
+        rank_counter += 1 
+    return song_tuple_list
+
+
+    
 
 
 def join_tables(cur, conn):
@@ -29,40 +60,25 @@ def join_tables(cur, conn):
 
 def setUpDatabase(db_name):
     path = os.path.dirname(os.path.abspath(__file__))
-    conn = sqlite3.connect(path+'/'+Spotify.db)
+    conn = sqlite3.connect(path+'/'+db_name)
     cur = conn.cursor()
     return cur, conn
 
-def createDatabase(cur, conn):
+def createDatabase(cur, conn, spotify):
     cur.execute("DROP TABLE IF EXISTS Spotify")
-    cur.execute("CREATE TABLE Spotify (song TEXT, artist TEXT, rank INTEGER)") 
-    song, artist, ranking = getSpotifyData()
-    for item in range(len(song))[:25]:
-        cur.execute("INSERT INTO Spotify (song, artist, rank) VALUES (?, ?, ?)", (song[item], artist[item], ranking[item]))
+    cur.execute("CREATE TABLE Spotify (song_title TEXT, song_artist TEXT, song_rank INTEGER, song_date TEXT, song_pop INTEGER, country_code TEXT)") 
+    #song_title, song_artist, song_rank, song_date, song_pop, "uk"
+    for item in create_playlist(spotify):
+        cur.execute("INSERT INTO Spotify (song_title, song_artist, song_rank, song_date, song_pop, country_code) VALUES (?, ?, ?, ?, ?, ?)", (item[0], item[1], item[2], item[3], item[4], item[5]))
     conn.commit()
 
 
 
-#def set_up_spotify_table:
-
-#def write_data_to_file:
-
-
-
-
-
 def main():
-    getSpotifyLink()
-    path = os.path.dirname(os.path.abspath(__file__))
-    conn = sqlite3.connect(path+'/Spotify.db')
-    cur = conn.cursor()
+    spotify = getSpotifyObject("7tj4dlofb2yvuijru40p3grnp", 'playlist-modify-public')
+    cur, conn = setUpDatabase('BillBoard.db')
+    createDatabase(cur, conn, spotify)
 
-    cur, conn = setUpDatabase('Spotify.db')
-    createDatabase(cur, conn)
-
-    set_up_spotify_table(cur, conn)
-
-    write_data_to_file("spotify_data.txt", cur, conn)
 
     conn.close()
 
