@@ -65,8 +65,8 @@ def setUpDatabase(db_name):
     return cur, conn
 
 def createDatabase(cur, conn, spotify):
-    cur.execute("DROP TABLE IF EXISTS Spotify")
-    cur.execute("CREATE TABLE Spotify (song_title TEXT, song_artist TEXT, song_rank INTEGER, song_date TEXT, song_pop INTEGER, country_code TEXT)") 
+    #cur.execute("DROP TABLE IF EXISTS Spotify")
+    cur.execute("CREATE TABLE IF NOT EXISTS Spotify (song_title TEXT, song_artist TEXT, song_rank INTEGER, song_date TEXT, song_pop INTEGER, country_code TEXT)") 
     #song_title, song_artist, song_rank, song_date, song_pop, "uk"
     for item in create_playlist(spotify):
         cur.execute("INSERT INTO Spotify (song_title, song_artist, song_rank, song_date, song_pop, country_code) VALUES (?, ?, ?, ?, ?, ?)", (item[0], item[1], item[2], item[3], item[4], item[5]))
@@ -76,7 +76,7 @@ def createDatabase(cur, conn, spotify):
 
 def main():
     spotify = getSpotifyObject("7tj4dlofb2yvuijru40p3grnp", 'playlist-modify-public')
-    cur, conn = setUpDatabase('BillBoard.db')
+    cur, conn = setUpDatabase('Spotify.db')
     createDatabase(cur, conn, spotify)
 
 
