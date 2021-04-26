@@ -34,34 +34,32 @@ def getBillBoardLink():
         goodRank = rank.text.strip()
         rankings.append(goodRank)
 
+
     weeksOnTop100 = []
     songWeeksOnChart = soup.find_all('div', class_= "chart-list-item__weeks-on-chart")
     for song in songWeeksOnChart:
         goodWeek = int(song.text.strip())
         weeksOnTop100.append(goodWeek)
+    
     #print(weeksOnTop100)
     
-    return songTitles, artistNames, rankings, weeksOnTop100
 
-#def weeksOnChart():
-    #for song in weeksOnTop100:
-     #   if song < 5:
-      #      songCat = 1
-       #    songCat = 2
-        #elif song < 15:
-        #    songCat = 3
-        #elif song < 20:
-        #    songCat = 4
-        #elif song < 25:
-        #    songCat = 5
-        #else:
-        #    songCat = 6
-        #songCategory.append(songCat)
-    #print(songCategory)
-
-   # print(weeksOnTop100)
-
-    #return weeksOnTop100, songCategory
+    songCategory = []
+    for song in weeksOnTop100:
+        if song < 5:
+            songCat = 1
+        if song < 10:
+            songCat = 2
+        elif song < 15:
+            songCat = 3
+        elif song < 20:
+            songCat = 4
+        elif song < 25:
+            songCat = 5
+        else:
+            songCat = 6
+        songCategory.append(songCat)
+    return songTitles, artistNames, rankings, weeksOnTop100, songCategory
 
     
 #weeksOnChart()
@@ -73,30 +71,37 @@ def setUpDatabase(db_name):
     return cur, conn
 
 def createDatabase(cur, conn, startIndex):
-    song, artist, ranking, weeksOnChart = getBillBoardLink()
+    song, artist, ranking, weeksOnTop100, songCategory = getBillBoardLink()
+    #print(startIndex)
     for item in range(startIndex, startIndex + 25):
-        cur.execute("INSERT INTO BillBoardSongs (song, artist, rank, weeks) VALUES (?, ?, ?, ?)", (song[item], artist[item], ranking[item], weeksOnChart[item]))
+        cur.execute("INSERT INTO BillBoardSongs (song, artist, rank, weeks_id) VALUES (?, ?, ?, ?)", (song[item], artist[item], ranking[item], songCategory[item]))
     conn.commit()
-
-#def createDatabase2(cur, conn, startIndex):
-    #weeksOnTop, songCategory = weeksOnChart()
-    #for item in range(startIndex, startIndex + 25):
-     #   cur.execute("INSERT INTO WeeksOnTopChart (weeks, songCategory) VALUES (?, ?)", (weeksOnTop[item], songCategory[item]))
-    #conn.commit()
+def createDatabase2(cur, conn):
+    stringWeeks = ['weeks less than 5', 'weeks less than 10', 'weeks less than 15', 'weeks less than 20', 'weeks over 20']
+    #song, artist, ranking, weeksOnTop100, songCategory = getBillBoardLink()
+    cur.execute('SELECT max (songCategory) from WeeksID')
+    maxNum = cur.fetchone()[0]
+    if maxNum == 5:
+        pass
+    else:
+        for item in range(5):
+            cur.execute("INSERT INTO WeeksID (songCategory, weeks) VALUES (?, ?)", (item+1, stringWeeks[item]))
+    conn.commit()
 
     #pass
 
 def main():
     getBillBoardLink()
     cur, conn = setUpDatabase('BillBoard.db')
-    cur.execute("CREATE TABLE IF NOT EXISTS BillBoardSongs (song TEXT, artist TEXT, rank INTEGER UNIQUE, weeks INTEGER)") 
-    #cur.execute("CREATE TABLE IF NOT EXISTS WeeksOnTopChart (weeks INTEGER, songCategory INTEGER)")
+    cur.execute("CREATE TABLE IF NOT EXISTS BillBoardSongs (song TEXT, artist TEXT, rank INTEGER UNIQUE, weeks_id INTEGER)") 
+    cur.execute("CREATE TABLE IF NOT EXISTS WeeksID (songCategory INTEGER, weeks TEXT)") 
+    cur.execute('SELECT* FROM BillBoardSongs JOIN WeeksID ON BillBoardSongs.weeks_id = WeeksID.songCategory')
     cur.execute('SELECT max (rank) from BillBoardSongs')
     startIndex = cur.fetchone()[0]
     if startIndex == None:
         startIndex = 0
     createDatabase(cur, conn, startIndex)
-    #createDatabase2(cur, conn, startIndex)
+    createDatabase2(cur, conn)
     
 main()
 
