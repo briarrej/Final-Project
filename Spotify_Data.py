@@ -46,8 +46,6 @@ def create_playlist(spotify):
         song_tuple_list.append((song_title, song_artist, song_rank, song_date, song_pop, "uk"))
         rank_counter += 1 
     return song_tuple_list
-
-
     
 
 
@@ -66,18 +64,19 @@ def setUpDatabase(db_name):
 
 def createDatabase(cur, conn, spotify):
     cur.execute("CREATE TABLE IF NOT EXISTS Spotify (song_title TEXT, song_artist TEXT, song_rank INTEGER, song_date TEXT, song_pop INTEGER, country_code TEXT)") 
-    for item in create_playlist(spotify):
+    #add_25 = 0
+    cur.execute("SELECT COUNT(*) FROM Spotify")
+    add_25 = cur.fetchone()[0]
+    for item in create_playlist(spotify)[add_25:add_25+25]:
         cur.execute("INSERT INTO Spotify (song_title, song_artist, song_rank, song_date, song_pop, country_code) VALUES (?, ?, ?, ?, ?, ?)", (item[0], item[1], item[2], item[3], item[4], item[5]))
+        add_25 += 1
     conn.commit()
-
 
 
 def main():
     spotify = getSpotifyObject("7tj4dlofb2yvuijru40p3grnp", 'playlist-modify-public')
-    cur, conn = setUpDatabase('Spotify.db')
+    cur, conn = setUpDatabase('Billboard.db')
     createDatabase(cur, conn, spotify)
-
-
     conn.close()
 
 
