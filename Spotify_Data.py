@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import requests
 import re
 import os
+import matplotlib.pyplot as plt
 import csv
 import unittest
 import json
@@ -47,6 +48,31 @@ def create_playlist(spotify):
         rank_counter += 1 
     return song_tuple_list
     
+def spotify_viz_chart(spotify):
+    d = {}
+    for song in song.values():
+        song_title = song[1][1:-1]
+        streams = int(song[4].replace (",", ""))
+        d[song_title] = streams
+    
+    names = []
+    streams = []
+    i = 1
+
+    for item in d.items():
+        names.append(item[0])
+        streams.append(item[1])
+        i += 1
+        if i == 11:
+            break
+
+    plt.barh(names, streams, color="green")
+    plt.title("Tope 10 Highest Streamed Songs On Spotify")
+    plt.xlabel("Streams (millions)")
+    plt.ylabel("Song Title")
+
+    plt.tick_params(axis='x', rotation=50)
+    plt.show()
 
 
 def join_tables(cur, conn):
