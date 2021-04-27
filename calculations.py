@@ -60,8 +60,9 @@ def viz(data):
     plt.xticks(xposition, newList)
     plt.xlabel('The Numbers of Weeks on The Top 100')
     plt.ylabel('Number of Songs')
-    plt.title('Average Amount of Time Spent on Billboard Top 100 ')
+    plt.title('Average Amount of Time Spent on Billboard Top 100')
     plt.show()
+
 def main():
     conn = set_connection('BillBoard.db')
     data = get_weeks_popularity(conn)
