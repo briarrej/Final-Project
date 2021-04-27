@@ -30,7 +30,6 @@ def get_weeks_popularity(conn):
             week_dict[num] += 1
         else:
             week_dict[num] = 1
-    print(week_dict)
     return week_dict
 
 
@@ -111,7 +110,6 @@ def get_song_pop(conn):
                 song_pop_dict[pop] += 1
             else:
                 song_pop_dict[pop] = 1
-    print(song_pop_dict)
     return song_pop_dict
 
 
