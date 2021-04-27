@@ -48,17 +48,16 @@ def getBillBoardLink():
     for song in weeksOnTop100:
         if song < 5:
             songCat = 1
-        if song < 10:
+        elif song < 10:
             songCat = 2
         elif song < 15:
             songCat = 3
         elif song < 20:
             songCat = 4
-        elif song < 25:
-            songCat = 5
         else:
-            songCat = 6
+            songCat = 5
         songCategory.append(songCat)
+    #print(songCategory)
     return songTitles, artistNames, rankings, weeksOnTop100, songCategory
 
     
@@ -77,7 +76,7 @@ def createDatabase(cur, conn, startIndex):
         cur.execute("INSERT INTO BillBoardSongs (song, artist, rank, weeks_id) VALUES (?, ?, ?, ?)", (song[item], artist[item], ranking[item], songCategory[item]))
     conn.commit()
 def createDatabase2(cur, conn):
-    stringWeeks = ['weeks less than 5', 'weeks less than 10', 'weeks less than 15', 'weeks less than 20', 'weeks over 20']
+    stringWeeks = ['less than 5 weeks', 'less than 10 weeks', 'less than 15 weeks', 'less than 20 weeks', 'more than 20 weeks']
     #song, artist, ranking, weeksOnTop100, songCategory = getBillBoardLink()
     cur.execute('SELECT max (songCategory) from WeeksID')
     maxNum = cur.fetchone()[0]
