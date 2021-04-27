@@ -30,7 +30,7 @@ def get_weeks_popularity(conn):
             week_dict[num] += 1
         else:
             week_dict[num] = 1
-    #print(week_dict)
+    print(week_dict)
     return week_dict
 
 
@@ -111,6 +111,7 @@ def get_song_pop(conn):
                 song_pop_dict[pop] += 1
             else:
                 song_pop_dict[pop] = 1
+    print(song_pop_dict)
     return song_pop_dict
 
 
@@ -130,6 +131,11 @@ def spotify_viz_chart(spot_data):
     plt.ylabel('Number of Songs')
     plt.title('Average Amount of Popularity on Spotify Top 100')
     plt.show()
+
+def write_genre(data):
+    f = open('calculations.txt', 'w' , encoding = 'utf-8')
+    f.write(json.dumps(data))
+    f.write()
 
 
 #runs all of the code 
