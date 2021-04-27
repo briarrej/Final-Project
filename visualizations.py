@@ -15,7 +15,8 @@ def set_connection(db_file):
         print('not connected')
     return conn
 
-# get the number of weeks that songs typically spend on the charts 
+
+# get the number of weeks that songs typically spend on the charts for billboard
 def get_weeks_popularity(conn):
     cur = conn.cursor()
     weeks = cur.execute('SELECT weeks_id FROM BillBoardSongs').fetchall()
@@ -32,7 +33,8 @@ def get_weeks_popularity(conn):
     #print(week_dict)
     return week_dict
 
-# make visualization
+
+# make visualization for billboard top 100 
 def viz(data):
     weeksOnChart = []
     numOfSongs = []
@@ -62,7 +64,9 @@ def viz(data):
     plt.ylabel('Number of Songs')
     plt.title('Average Amount of Time Spent on Billboard Top 100')
     plt.show()
-#make spotify viz
+
+
+#make dictionary for spotify visual
 def get_song_pop(conn):
     cur = conn.cursor()
     popularity = cur.execute('SELECT song_pop FROM Spotify').fetchall()
@@ -107,18 +111,15 @@ def get_song_pop(conn):
                 song_pop_dict[pop] += 1
             else:
                 song_pop_dict[pop] = 1
-    #print(popularity)
-    #print(song_pop_list)
-    #print(song_pop_dict)
     return song_pop_dict
 
+
+#makes visualization for spotify top 100 charts 
 def spotify_viz_chart(spot_data):
-    #d = {}
     pop_on_chart = []
     numbOfSongs = []
     dataSorted = sorted(spot_data.items(),key = lambda x:x[0])
-    print(dataSorted)
-    
+   
     for i in dataSorted:
         pop_on_chart.append(i[0])
         numbOfSongs.append(i[1])
@@ -131,6 +132,7 @@ def spotify_viz_chart(spot_data):
     plt.show()
 
 
+#runs all of the code 
 def main():
     conn = set_connection('BillBoard.db')
     data = get_weeks_popularity(conn)
