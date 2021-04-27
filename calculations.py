@@ -21,6 +21,7 @@ def get_weeks_popularity(conn):
     cur = conn.cursor()
     weeks = cur.execute('SELECT weeks_id FROM BillBoardSongs').fetchall()
 
+
     # print(type(genres))
     weeks_list = []
     for weekID in weeks:
@@ -63,6 +64,47 @@ def viz(data):
     plt.title('Average Amount of Time Spent on Billboard Top 100')
     plt.show()
 
+<<<<<<< HEAD
+=======
+#make spotify viz
+def get_week_popularity(conn):
+    #weeks_dict = {}
+    cur = conn.cursor()
+    weeks = cur.execute('SELECT weeks_id FROM Spotify').fetchall()
+
+def spotify_viz_chart(song_tuple_list):
+    d = {}
+    weeks_on_chart = []
+    numbOfSongs = []
+    dataSorted = sorted(data.items(),key = lambda x:x[0])
+    
+    for i in dataSorted:
+        weeks_on_chart.append(i[0])
+        numbOfSongs.append(i[1])
+    new_list = []
+    
+    for week in weeks_on_chart:
+        weeks = weeks[0]
+
+    
+    
+    
+    for song in song_tuple_list:
+        song_title = song[1][1:-1]
+        #print(song[4])
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> 12a1d119c804e7b4f7c9eeaeb159d1e4e85d7810
 def main():
     conn = set_connection('BillBoard.db')
     data = get_weeks_popularity(conn)

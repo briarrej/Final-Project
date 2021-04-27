@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import requests
 import re
 import os
+import matplotlib.pyplot as plt
 import csv
 import unittest
 import json
@@ -47,6 +48,31 @@ def create_playlist(spotify):
         rank_counter += 1 
     return song_tuple_list
     
+#def spotify_viz_chart(song_tuple_list):
+    #d = {}
+    #for song in song_tuple_list:
+        #song_title = song[1][1:-1]
+        #print(song[4])
+    
+    
+    #names = []
+    #streams = []
+    #i = 1
+
+    #for item in d.items():
+        #names.append(item[0])
+        #streams.append(item[1])
+        #i += 1
+        #if i == 11:
+            #break
+
+    #plt.barh(names, streams, color="green")
+    #plt.title("Tope 10 Highest Streamed Songs On Spotify")
+    #plt.xlabel("Streams (millions)")
+    #plt.ylabel("Song Title")
+
+    #plt.tick_params(axis='x', rotation=50)
+    #plt.show()
 
 
 def join_tables(cur, conn):
@@ -64,7 +90,6 @@ def setUpDatabase(db_name):
 
 def createDatabase(cur, conn, spotify):
     cur.execute("CREATE TABLE IF NOT EXISTS Spotify (song_title TEXT, song_artist TEXT, song_rank INTEGER, song_date TEXT, song_pop INTEGER, country_code TEXT)") 
-    #add_25 = 0
     cur.execute("SELECT COUNT(*) FROM Spotify")
     add_25 = cur.fetchone()[0]
     for item in create_playlist(spotify)[add_25:add_25+25]:
@@ -77,8 +102,9 @@ def main():
     spotify = getSpotifyObject("7tj4dlofb2yvuijru40p3grnp", 'playlist-modify-public')
     cur, conn = setUpDatabase('Billboard.db')
     createDatabase(cur, conn, spotify)
+    playlist_songs = create_playlist(spotify)
+    spotify_viz_chart(playlist_songs)
     conn.close()
-
 
 
 if __name__ == "__main__":
