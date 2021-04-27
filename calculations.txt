@@ -1,0 +1,14 @@
+Billboard Time Spent on Top 100 Data
+Number of Songs on the Billboard Top 100 Charts for less than 5 weeks = 23
+Number of Songs on the Billboard Top 100 Charts for less than 10 weeks = 24
+Number of Songs on the Billboard Top 100 Charts for less than 15 weeks = 21
+Number of Songs on the Billboard Top 100 Charts for less than 20 weeks = 15
+Number of Songs on the Billboard Top 100 Charts for more than 20 weeks = 17
+
+Spotify Popularity on Top 100 Data
+Number of Songs on the Spotify Top 100 Charts with popularity above 90%: 34
+Number of Songs on the Spotify Top 100 Charts with popularity between 80-89%: 38
+Number of Songs on the Spotify Top 100 Charts with popularity between 70-79%: 9
+Number of Songs on the Spotify Top 100 Charts with popularity between 60-69%: 1
+Number of Songs on the Spotify Top 100 Charts with popularity between 50-59%: 4
+Number of Songs on the Spotify Top 100 Charts with popularity below 50%: 14
