@@ -11,7 +11,7 @@ import matplotlib
 import numpy as np
 
 def getBillBoardLink():
-    url = 'https://www.billboard.com/charts/Hot-100/2021-03-27'
+    url = 'https://www.billboard.com/charts/Hot-100/2021-04-17'
     resp = requests.get(url)
     soup = BeautifulSoup(resp.text, 'html.parser')
     
