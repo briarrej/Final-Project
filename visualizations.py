@@ -130,10 +130,10 @@ def spotify_viz_chart(spot_data):
     plt.title('Average Amount of Popularity on Spotify Top 100')
     plt.show()
 
-def write_genre(data):
+def write_calculations(data):
     f = open('calculations.txt', 'w' , encoding = 'utf-8')
     f.write(json.dumps(data))
-    f.write()
+    
 
 
 #runs all of the code 
